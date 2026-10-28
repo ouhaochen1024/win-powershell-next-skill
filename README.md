@@ -4,16 +4,6 @@
 
 面向 AI coding agent 的 Windows 命令执行规范，执行环境以 **Windows PowerShell 5.1（`powershell.exe`）** 为准。核心目标是**减少因 shell 语法、引号、编码、退出码误判导致的试错**——这些问题在 Windows 上尤其高发，且每次失败都要消耗一轮上下文。
 
-## 为什么是 5.1 而不是 7
-
-PowerShell 7（`pwsh`）确实更好用，但它**不是系统自带的**，要求用户先装一个解释器，等于把「跑一条命令」变成「先做一次环境部署」。
-
-- `powershell.exe`（5.1）随 Windows 预装，任何机器上都在
-- 5.1 是 7 的语法子集：只写 5.1 语法，在 7 上同样能跑；反过来不成立
-- 一旦允许混写两种方言，agent 就会随机写出 `&&`、三元、`utf8NoBOM`，在 5.1 上直接语法错误
-
-所以本 skill 的策略是：**默认 powershell.exe，只写 5.1 可运行语法，不强制也不要求 PowerShell 7**。只有确实需要 7 专有特性时（如 `ForEach-Object -Parallel` 真并行），才说明理由、征得同意后**对那一段**单独用 `pwsh.exe` 执行。
-
 ## 为什么需要它
 
 Agent 在 Windows 上最常见的失败模式：
